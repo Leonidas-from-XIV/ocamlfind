@@ -126,11 +126,11 @@ let suffix = if is_native then "cmxs" else "cma" in
  * The test works by executing the toplevel phrase "Topfind.reset" and
  * checking whether this causes an error.
  *)
-let () =
-  if not (exec_test "Topfind.reset;;") then (
-    Topdirs.dir_load Format.err_formatter (Filename.concat findlib_directory ("findlib." ^ suffix));
-    Topdirs.dir_load Format.err_formatter (Filename.concat findlib_directory ("findlib_top." ^ suffix)))
-in
+if not (exec_test "Topfind.reset;;") then (
+  Topdirs.dir_load Format.err_formatter (findlib_directory / ("findlib." ^ suffix));
+  Topdirs.dir_load Format.err_formatter (findlib_directory / ("findlib_top." ^ suffix)))
+;;
+(* phrase has to end here otherwise Topfind is not accessible *)
 
 (* REMOVE_DIRECTORY_BEGIN *)
 (* OCaml < 4.00 do not have this so only include this code if it was detected *)
@@ -140,6 +140,7 @@ let () = Topdirs.dir_remove_directory "+compiler-libs" in
 (* The following is always executed. It is harmless if findlib was already
  * initialized
  *)
+let is_native = (Gc.get ()).Gc.stack_limit = 0 in
 let pred = if is_native then "native" else "byte" in
 
 Topfind.add_predicates [ pred; "toploop" ];
