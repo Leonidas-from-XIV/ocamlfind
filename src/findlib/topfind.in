@@ -4,6 +4,9 @@
  * working findlib toploop.
  *)
 
+(* To access Toploop in OCaml >= 4.00. This directory will be later removed from path if possible *)
+#directory "+compiler-libs";;
+
 let exists path =
   match Sys.file_exists path with
   | true -> Some path
@@ -103,9 +106,6 @@ in
 
 let () = Topdirs.dir_directory findlib_directory in
   (* OCaml-4.00 requires to use dir_directory before we load anything *)
-
-let () = Topdirs.dir_directory "+compiler-libs" in
-  (* For OCaml-4.00. This directory will be later removed from path if possible *)
 
 let exec_test s =
   let l = Lexing.from_string s in
